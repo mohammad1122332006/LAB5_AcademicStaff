@@ -4,79 +4,72 @@ using namespace std;
 struct Node {
     int data;
     Node* next;
-
 };
 
 Node* head = NULL;
 
-void insertFirst(int value) {
-    Node* last;
-    Node* newnode = new Node;
-    newnode->data = value;
-    newnode->next = NULL;
- 
-    if (head == NULL) {
-        head = newnode;
-        newnode->next = NULL;
-    }
-    else {
-        last = head;
-        while (last->next != NULL) {
-            last = last->next;
-        }
-        last->next = newnode;
-        newnode->next = NULL;
-    }
-}
+// 1) Insert node at given position
+void insertAtPosition(int value, int pos) {
+    Node* newNode = new Node;
+    newNode->data = value;
+    newNode->next = NULL;
 
-void insertlast(int value) {
-    Node* newnode = new Node;
-        newnode->data = value;
-    newnode->next = NULL;
-    if (head == NULL) {
-        head = newnode;
+    if (pos == 1) {
+        newNode->next = head;
+        head = newNode;
+        return;
     }
-    else {
-        Node* temp = head;
-        while (temp->next != NULL) {
-            temp = temp->next;
-        }
-		temp->next = newnode;
-    }
-}
 
-void insertafter(int value, int after) {
-    Node* newnode = new Node;
-    newnode->data = value;
-    newnode->next = NULL;
     Node* temp = head;
-    while (temp != NULL && temp->data != after) {
+    for (int i = 1; i < pos - 1 && temp != NULL; i++) {
         temp = temp->next;
     }
-    if (temp != NULL) {
-        newnode->next = temp->next;
-        temp->next = newnode;
-    }
-    else {
-        cout << "Node with value " << after << " not found." << endl;
-    }
+
+    if (temp == NULL) return;
+
+    newNode->next = temp->next;
+    temp->next = newNode;
 }
+
+// 2) Delete last node
+void deleteLast() {
+    if (head == NULL) return;
+
+    if (head->next == NULL) {
+        delete head;
+        head = NULL;
+        return;
+    }
+
+    Node* temp = head;
+    while (temp->next->next != NULL) {
+        temp = temp->next;
+    }
+
+    delete temp->next;
+    temp->next = NULL;
+}
+
+// 3) Display all nodes
 void display() {
     Node* temp = head;
     while (temp != NULL) {
-        cout << temp->data << endl;
+        cout << temp->data << " -> ";
         temp = temp->next;
     }
-
+    cout << "NULL" << endl;
 }
 
 int main() {
-	insertFirst(10);
-	insertFirst(20);
-	insertFirst(30);
-    insertlast(5);
-	insertafter(15, 10);
+    insertAtPosition(10, 1);
+    insertAtPosition(20, 2);
+    insertAtPosition(30, 3);
+    insertAtPosition(15, 2);
+
     display();
+
+    deleteLast();
+    display();
+
     return 0;
 }
-
